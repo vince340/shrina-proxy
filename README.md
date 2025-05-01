@@ -33,7 +33,7 @@ A powerful and efficient CORS proxy server built with Express.js and TypeScript,
 
 ```bash
 # Clone the repository
-git clone https://github.com/xciphertv/shinra-proxy.git
+git clone https://github.com/yourusername/shinra-proxy.git
 cd shinra-proxy
 
 # Install dependencies
