@@ -33,7 +33,7 @@ A powerful and efficient CORS proxy server built with Express.js and TypeScript,
 
 ```bash
 # Clone the repository
-git clone https://github.com/xciphertv/shinra-proxy.git
+git clone https://github.com/yourusername/shinra-proxy.git
 cd shinra-proxy
 
 # Install dependencies
@@ -118,11 +118,143 @@ The proxy is configured using environment variables:
 ### Status Endpoints
 
 - **GET /proxy/status**: Get server status and resource usage
+  ```json
+  {
+    "status": "ok",
+    "version": "0.2.0",
+    "uptime": 3654.8,
+    "timestamp": "2025-05-01T15:30:45.123Z",
+    "environment": "production",
+    "memory": {
+      "rss": 56.23,
+      "heapTotal": 32.75,
+      "heapUsed": 27.12,
+      "external": 2.34
+    }
+  }
+  ```
+
 - **GET /proxy/cache/stats**: Get cache statistics
+  ```json
+  {
+    "status": "ok",
+    "data": {
+      "enabled": true,
+      "size": "45.2 MB",
+      "maxSize": "100 MB",
+      "items": 328,
+      "maxItems": 1000,
+      "hitRatio": "0.78",
+      "hits": 1249,
+      "misses": 352
+    },
+    "timestamp": "2025-05-01T15:30:45.123Z"
+  }
+  ```
+
 - **POST /proxy/cache/clear**: Clear the cache
+  ```json
+  {
+    "status": "ok",
+    "message": "Cache cleared successfully",
+    "timestamp": "2025-05-01T15:30:45.123Z"
+  }
+  ```
+
 - **GET /proxy/workers/stats**: Get worker thread statistics
+  ```json
+  {
+    "status": "ok",
+    "data": {
+      "enabled": true,
+      "threadsAvailable": 8,
+      "threadsRunning": 3,
+      "maxThreads": 8,
+      "queueSize": 0
+    },
+    "timestamp": "2025-05-01T15:30:45.123Z"
+  }
+  ```
+
 - **GET /proxy/metrics**: Get performance metrics
+  ```json
+  {
+    "status": "ok",
+    "data": {
+      "server": {
+        "uptime": "2 hr 45 min",
+        "system": {
+          "uptime": "5 days 7 hr",
+          "cpus": 8,
+          "loadAvg": [1.25, 0.86, 0.52],
+          "memory": {
+            "total": "16 GB",
+            "used": "8.7 GB",
+            "free": "7.3 GB",
+            "usedPercent": "54.38%"
+          },
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "process": {
+          "uptime": "2 hr 45 min",
+          "pid": 12345,
+          "memory": {
+            "rss": "56.23 MB",
+            "heapTotal": "32.75 MB",
+            "heapUsed": "27.12 MB",
+            "external": "2.34 MB"
+          },
+          "versions": {
+            "node": "v18.16.0"
+          }
+        }
+      },
+      "requests": {
+        "total": 1601,
+        "success": 1578,
+        "error": 23,
+        "successRate": "98.56%"
+      },
+      "performance": {
+        "avgResponseTime": "187 ms",
+        "maxResponseTime": "3.24 sec",
+        "throughput": {
+          "bytesIn": "24.7 MB",
+          "bytesOut": "458.2 MB",
+          "totalTransferred": "482.9 MB"
+        }
+      },
+      "features": {
+        "streaming": {
+          "requests": 421,
+          "totalSize": "387.5 MB",
+          "avgSize": "920.4 KB"
+        },
+        "cache": {
+          "hits": 1249,
+          "misses": 352,
+          "hitRatio": "78.01%"
+        },
+        "workers": {
+          "tasks": 1892,
+          "errors": 7,
+          "successRate": "99.63%"
+        }
+      }
+    },
+    "timestamp": "2025-05-01T15:30:45.123Z"
+  }
+  ```
+
 - **POST /proxy/metrics/reset**: Reset performance metrics
+  ```json
+  {
+    "status": "ok",
+    "message": "Performance metrics reset successfully",
+    "timestamp": "2025-05-01T15:30:45.123Z"
+  }
+  ```
 
 ## Development
 
@@ -143,14 +275,114 @@ npm run lint
 
 Shinra Proxy includes a domain template system to bypass anti-hotlinking protection. The templates in `src/config/domain-templates.ts` define specific headers to use for different domains.
 
+Example domain template:
+
+```typescript
+{
+  pattern: /\.kwikie\.ru$/i,
+  headers: {
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0',
+    'accept': '*/*',
+    'accept-language': 'en-US,en;q=0.5',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'cross-site',
+  },
+  headersFn: (url: URL) => {
+    return {
+      'origin': 'https://kwik.si',
+      'referer': 'https://kwik.si/',
+    };
+  }
+}
+```
+
+Usage in requests:
+```
+http://localhost:3000/proxy?url=https://cdn.kwikie.ru/video123.m3u8
+```
+The proxy will automatically apply the correct headers to bypass the anti-hotlinking protection.
+
 ### Custom Content Type Detection
 
 The proxy can detect content types based on binary signatures, overriding incorrect content types returned by servers.
+
+Example of content type detection:
+
+```typescript
+// Detect MPEG-TS content even if served with an incorrect content type
+if (detectTransportStream(buffer)) {
+  return 'video/mp2t';
+}
+```
+
+Usage example for MPEG-TS segments with misleading extensions:
+```
+http://localhost:3000/proxy?url=https://example.com/segment-123-v1-a1.jpg
+```
+
+In this case, if the content is actually a transport stream despite the `.jpg` extension, Shinra will correctly identify it as `video/mp2t`.
 
 ### Adaptive Decompression
 
 Shinra automatically detects and handles various compression formats, even when content-encoding headers are incorrect or missing.
 
+Example compression formats supported:
+- GZIP (magic bytes: `0x1F 0x8B`)
+- Brotli
+- Zstandard (magic bytes: `0x28 0xB5 0x2F 0xFD`)
+- Deflate
+
+Example usage:
+```
+http://localhost:3000/proxy?url=https://example.com/compressed-content
+```
+
+If the server returns compressed content without correct headers, Shinra will:
+1. Detect the compression format based on magic bytes
+2. Decompress the content using the appropriate algorithm
+3. Remove the content-encoding header from the response
+4. Forward the decompressed content to the client
+
+### M3U8 Playlist Processing
+
+Shinra automatically processes M3U8 playlists to rewrite all URLs to pass through the proxy.
+
+Example original M3U8 content:
+```
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXT-X-MEDIA-SEQUENCE:0
+#EXT-X-KEY:METHOD=AES-128,URI="key.php?id=12345"
+segment-0.ts
+segment-1.ts
+https://cdn2.example.com/segment-2.ts
+```
+
+After processing through Shinra:
+```
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXT-X-MEDIA-SEQUENCE:0
+#EXT-X-KEY:METHOD=AES-128,URI="/proxy?url=https%3A%2F%2Fexample.com%2Fkey.php%3Fid%3D12345"
+/proxy?url=https%3A%2F%2Fexample.com%2Fsegment-0.ts
+/proxy?url=https%3A%2F%2Fexample.com%2Fsegment-1.ts
+/proxy?url=https%3A%2F%2Fcdn2.example.com%2Fsegment-2.ts
+```
+
+This ensures that all segments and resources referenced in the playlist are also proxied through Shinra.
+
 ## License
 
 MIT
+
+## Hosting Recommendations
+
+For those looking to deploy Shinra Proxy in a production environment, here are some recommended hosting options:
+
+- [Jink Host](https://clients.jink.host/aff.php?aff=7) - Affordable hosting with good performance for small to medium proxy deployments
+- [Hivelocity](https://my.hivelocity.net/sign-up?referralCode=JKUA) - Enterprise-grade dedicated servers for high-traffic or commercial proxy applications
+
+When choosing a hosting provider, consider factors like bandwidth limits, CPU resources, and geographic location to ensure optimal performance for your specific streaming needs.
