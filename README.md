@@ -275,13 +275,104 @@ npm run lint
 
 Shinra Proxy includes a domain template system to bypass anti-hotlinking protection. The templates in `src/config/domain-templates.ts` define specific headers to use for different domains.
 
+Example domain template:
+
+```typescript
+{
+  pattern: /\.kwikie\.ru$/i,
+  headers: {
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0',
+    'accept': '*/*',
+    'accept-language': 'en-US,en;q=0.5',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'cross-site',
+  },
+  headersFn: (url: URL) => {
+    return {
+      'origin': 'https://kwik.si',
+      'referer': 'https://kwik.si/',
+    };
+  }
+}
+```
+
+Usage in requests:
+```
+http://localhost:3000/proxy?url=https://cdn.kwikie.ru/video123.m3u8
+```
+The proxy will automatically apply the correct headers to bypass the anti-hotlinking protection.
+
 ### Custom Content Type Detection
 
 The proxy can detect content types based on binary signatures, overriding incorrect content types returned by servers.
 
+Example of content type detection:
+
+```typescript
+// Detect MPEG-TS content even if served with an incorrect content type
+if (detectTransportStream(buffer)) {
+  return 'video/mp2t';
+}
+```
+
+Usage example for MPEG-TS segments with misleading extensions:
+```
+http://localhost:3000/proxy?url=https://example.com/segment-123-v1-a1.jpg
+```
+
+In this case, if the content is actually a transport stream despite the `.jpg` extension, Shinra will correctly identify it as `video/mp2t`.
+
 ### Adaptive Decompression
 
 Shinra automatically detects and handles various compression formats, even when content-encoding headers are incorrect or missing.
+
+Example compression formats supported:
+- GZIP (magic bytes: `0x1F 0x8B`)
+- Brotli
+- Zstandard (magic bytes: `0x28 0xB5 0x2F 0xFD`)
+- Deflate
+
+Example usage:
+```
+http://localhost:3000/proxy?url=https://example.com/compressed-content
+```
+
+If the server returns compressed content without correct headers, Shinra will:
+1. Detect the compression format based on magic bytes
+2. Decompress the content using the appropriate algorithm
+3. Remove the content-encoding header from the response
+4. Forward the decompressed content to the client
+
+### M3U8 Playlist Processing
+
+Shinra automatically processes M3U8 playlists to rewrite all URLs to pass through the proxy.
+
+Example original M3U8 content:
+```
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXT-X-MEDIA-SEQUENCE:0
+#EXT-X-KEY:METHOD=AES-128,URI="key.php?id=12345"
+segment-0.ts
+segment-1.ts
+https://cdn2.example.com/segment-2.ts
+```
+
+After processing through Shinra:
+```
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXT-X-MEDIA-SEQUENCE:0
+#EXT-X-KEY:METHOD=AES-128,URI="/proxy?url=https%3A%2F%2Fexample.com%2Fkey.php%3Fid%3D12345"
+/proxy?url=https%3A%2F%2Fexample.com%2Fsegment-0.ts
+/proxy?url=https%3A%2F%2Fexample.com%2Fsegment-1.ts
+/proxy?url=https%3A%2F%2Fcdn2.example.com%2Fsegment-2.ts
+```
+
+This ensures that all segments and resources referenced in the playlist are also proxied through Shinra.
 
 ## License
 
