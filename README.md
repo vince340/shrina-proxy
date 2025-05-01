@@ -33,7 +33,7 @@ A powerful and efficient CORS proxy server built with Express.js and TypeScript,
 
 ```bash
 # Clone the repository
-git clone https://github.com/xciphertv/shinra-proxy.git
+git clone https://github.com/yourusername/shinra-proxy.git
 cd shinra-proxy
 
 # Install dependencies
@@ -118,11 +118,143 @@ The proxy is configured using environment variables:
 ### Status Endpoints
 
 - **GET /proxy/status**: Get server status and resource usage
+  ```json
+  {
+    "status": "ok",
+    "version": "0.2.0",
+    "uptime": 3654.8,
+    "timestamp": "2025-05-01T15:30:45.123Z",
+    "environment": "production",
+    "memory": {
+      "rss": 56.23,
+      "heapTotal": 32.75,
+      "heapUsed": 27.12,
+      "external": 2.34
+    }
+  }
+  ```
+
 - **GET /proxy/cache/stats**: Get cache statistics
+  ```json
+  {
+    "status": "ok",
+    "data": {
+      "enabled": true,
+      "size": "45.2 MB",
+      "maxSize": "100 MB",
+      "items": 328,
+      "maxItems": 1000,
+      "hitRatio": "0.78",
+      "hits": 1249,
+      "misses": 352
+    },
+    "timestamp": "2025-05-01T15:30:45.123Z"
+  }
+  ```
+
 - **POST /proxy/cache/clear**: Clear the cache
+  ```json
+  {
+    "status": "ok",
+    "message": "Cache cleared successfully",
+    "timestamp": "2025-05-01T15:30:45.123Z"
+  }
+  ```
+
 - **GET /proxy/workers/stats**: Get worker thread statistics
+  ```json
+  {
+    "status": "ok",
+    "data": {
+      "enabled": true,
+      "threadsAvailable": 8,
+      "threadsRunning": 3,
+      "maxThreads": 8,
+      "queueSize": 0
+    },
+    "timestamp": "2025-05-01T15:30:45.123Z"
+  }
+  ```
+
 - **GET /proxy/metrics**: Get performance metrics
+  ```json
+  {
+    "status": "ok",
+    "data": {
+      "server": {
+        "uptime": "2 hr 45 min",
+        "system": {
+          "uptime": "5 days 7 hr",
+          "cpus": 8,
+          "loadAvg": [1.25, 0.86, 0.52],
+          "memory": {
+            "total": "16 GB",
+            "used": "8.7 GB",
+            "free": "7.3 GB",
+            "usedPercent": "54.38%"
+          },
+          "platform": "linux",
+          "arch": "x64"
+        },
+        "process": {
+          "uptime": "2 hr 45 min",
+          "pid": 12345,
+          "memory": {
+            "rss": "56.23 MB",
+            "heapTotal": "32.75 MB",
+            "heapUsed": "27.12 MB",
+            "external": "2.34 MB"
+          },
+          "versions": {
+            "node": "v18.16.0"
+          }
+        }
+      },
+      "requests": {
+        "total": 1601,
+        "success": 1578,
+        "error": 23,
+        "successRate": "98.56%"
+      },
+      "performance": {
+        "avgResponseTime": "187 ms",
+        "maxResponseTime": "3.24 sec",
+        "throughput": {
+          "bytesIn": "24.7 MB",
+          "bytesOut": "458.2 MB",
+          "totalTransferred": "482.9 MB"
+        }
+      },
+      "features": {
+        "streaming": {
+          "requests": 421,
+          "totalSize": "387.5 MB",
+          "avgSize": "920.4 KB"
+        },
+        "cache": {
+          "hits": 1249,
+          "misses": 352,
+          "hitRatio": "78.01%"
+        },
+        "workers": {
+          "tasks": 1892,
+          "errors": 7,
+          "successRate": "99.63%"
+        }
+      }
+    },
+    "timestamp": "2025-05-01T15:30:45.123Z"
+  }
+  ```
+
 - **POST /proxy/metrics/reset**: Reset performance metrics
+  ```json
+  {
+    "status": "ok",
+    "message": "Performance metrics reset successfully",
+    "timestamp": "2025-05-01T15:30:45.123Z"
+  }
+  ```
 
 ## Development
 
