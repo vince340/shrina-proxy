@@ -377,6 +377,7 @@ This ensures that all segments and resources referenced in the playlist are also
 ## License
 
 MIT
+<<<<<<< HEAD
 
 ## Hosting Recommendations
 
@@ -386,3 +387,5 @@ For those looking to deploy Shinra Proxy in a production environment, here are s
 - [Hivelocity](https://my.hivelocity.net/sign-up?referralCode=JKUA) - Enterprise-grade dedicated servers for high-traffic or commercial proxy applications
 
 When choosing a hosting provider, consider factors like bandwidth limits, CPU resources, and geographic location to ensure optimal performance for your specific streaming needs.
+=======
+>>>>>>> 7be2ee8a7c8419f760e74ef6e99e5f255d3e6d68
