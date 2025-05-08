@@ -337,7 +337,7 @@ export const domainTemplates: DomainTemplate[] = [
         };
       }
     },
-
+  
     // clearskydrift45.site
     {
       pattern: /clearskydrift45\.site$/i,
@@ -351,8 +351,8 @@ export const domainTemplates: DomainTemplate[] = [
       },
       headersFn: (url: URL) => {
         return {
-          'origin': 'https://megacloud.blog',
-          'referer': 'https://megacloud.blog/',
+          'origin': 'https://kerolaunochan.online',
+          'referer': 'https://kerolaunochan.online/',
         };
       }
     },
