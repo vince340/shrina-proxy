@@ -34,7 +34,7 @@ A powerful and efficient CORS proxy server built with Express.js and TypeScript,
 ```bash
 # Clone the repository
 git clone https://github.com/xciphertv/shrina-proxy.git
-cd shinra-proxy
+cd shrina-proxy
 
 # Install dependencies
 npm install
@@ -75,12 +75,12 @@ http://localhost:3000/proxy/base64/aHR0cHM6Ly9leGFtcGxlLmNvbS92aWRlby5tM3U4
 
 ### Streaming Media Support
 
-Shinra Proxy has specialized handling for various streaming media formats:
+Shrina Proxy has specialized handling for various streaming media formats:
 
 - **HLS Playlists**: Automatically processes M3U8 playlists to rewrite all segment URLs
 - **MPEG-TS Segments**: Handles TS segments with proper content type detection
 - **WebVTT Subtitles**: Processes VTT files to rewrite image URLs
-- **Image Segments**: Some services use JPG extensions for TS segments - Shinra handles this correctly
+- **Image Segments**: Some services use JPG extensions for TS segments - Shrina handles this correctly
 
 Example for proxying an HLS stream:
 
@@ -273,7 +273,7 @@ npm run lint
 
 ### Domain Templates
 
-Shinra Proxy includes a domain template system to bypass anti-hotlinking protection. The templates in `src/config/domain-templates.ts` define specific headers to use for different domains.
+Shrina Proxy includes a domain template system to bypass anti-hotlinking protection. The templates in `src/config/domain-templates.ts` define specific headers to use for different domains.
 
 Example domain template:
 
@@ -338,7 +338,7 @@ Example usage:
 http://localhost:3000/proxy?url=https://example.com/compressed-content
 ```
 
-If the server returns compressed content without correct headers, Shinra will:
+If the server returns compressed content without correct headers, Shrina will:
 1. Detect the compression format based on magic bytes
 2. Decompress the content using the appropriate algorithm
 3. Remove the content-encoding header from the response
@@ -360,7 +360,7 @@ segment-1.ts
 https://cdn2.example.com/segment-2.ts
 ```
 
-After processing through Shinra:
+After processing through Shrina:
 ```
 #EXTM3U
 #EXT-X-VERSION:3
@@ -372,7 +372,7 @@ After processing through Shinra:
 /proxy?url=https%3A%2F%2Fcdn2.example.com%2Fsegment-2.ts
 ```
 
-This ensures that all segments and resources referenced in the playlist are also proxied through Shinra.
+This ensures that all segments and resources referenced in the playlist are also proxied through Shrina.
 
 ## License
 
