@@ -1,4 +1,4 @@
-# Shinra Proxy
+# Shrina Proxy
 
 A powerful and efficient CORS proxy server built with Express.js and TypeScript, specifically designed to handle streaming media formats like M3U8 playlists, MPEG-TS segments, and various other media formats.
 
@@ -33,7 +33,7 @@ A powerful and efficient CORS proxy server built with Express.js and TypeScript,
 
 ```bash
 # Clone the repository
-git clone https://github.com/xciphertv/shinra-proxy.git
+git clone https://github.com/xciphertv/shrina-proxy.git
 cd shinra-proxy
 
 # Install dependencies
@@ -321,11 +321,11 @@ Usage example for MPEG-TS segments with misleading extensions:
 http://localhost:3000/proxy?url=https://example.com/segment-123-v1-a1.jpg
 ```
 
-In this case, if the content is actually a transport stream despite the `.jpg` extension, Shinra will correctly identify it as `video/mp2t`.
+In this case, if the content is actually a transport stream despite the `.jpg` extension, Shrina will correctly identify it as `video/mp2t`.
 
 ### Adaptive Decompression
 
-Shinra automatically detects and handles various compression formats, even when content-encoding headers are incorrect or missing.
+Shrina automatically detects and handles various compression formats, even when content-encoding headers are incorrect or missing.
 
 Example compression formats supported:
 - GZIP (magic bytes: `0x1F 0x8B`)
@@ -346,7 +346,7 @@ If the server returns compressed content without correct headers, Shinra will:
 
 ### M3U8 Playlist Processing
 
-Shinra automatically processes M3U8 playlists to rewrite all URLs to pass through the proxy.
+Shrina automatically processes M3U8 playlists to rewrite all URLs to pass through the proxy.
 
 Example original M3U8 content:
 ```
@@ -380,7 +380,7 @@ MIT
 
 ## Hosting Recommendations
 
-For those looking to deploy Shinra Proxy in a production environment, here are some recommended hosting options:
+For those looking to deploy Shrina Proxy in a production environment, here are some recommended hosting options:
 
 - [Jink Host](https://clients.jink.host/aff.php?aff=7) - Affordable hosting with good performance for small to medium proxy deployments
 - [Hivelocity](https://my.hivelocity.net/sign-up?referralCode=JKUA) - Enterprise-grade dedicated servers for high-traffic or commercial proxy applications
