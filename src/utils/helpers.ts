@@ -256,30 +256,24 @@ export function detectTransportStream(buffer: ArrayBuffer | Buffer | Uint8Array)
     
     // Minimum size check
     if (data.length < 188) {
-      // TS packets are 188 bytes, so need at least one packet
       return false;
     }
     
-    // Check if it starts with a sync byte (0x47)
+    // Check first byte for TS sync byte (0x47)
     if (data[0] !== 0x47) {
       return false;
     }
     
-    // For more confidence, look for additional TS packet markers
-    // TS packets are typically 188 bytes, so check multiple sync bytes
-    let syncCount = 1;
-    
-    // Check up to 5 potential packets
-    for (let i = 1; i <= 5; i++) {
-      const packetStart = i * 188;
-      if (packetStart < data.length && data[packetStart] === 0x47) {
-        syncCount++;
+    // Check additional TS sync bytes at 188-byte intervals
+    // Only need to find 1 additional sync byte to identify as TS
+    for (let i = 1; i <= 3; i++) {
+      const offset = i * 188;
+      if (offset < data.length && data[offset] === 0x47) {
+        return true;
       }
     }
     
-    // If we found at least 2 sync bytes at the expected positions,
-    // it's very likely a transport stream
-    return syncCount >= 2;
+    return false;
   } catch (error) {
     logger.error('Error detecting transport stream:', error);
     return false;
