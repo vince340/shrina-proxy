@@ -87,7 +87,13 @@ export const COMMON_MIME_TYPES = {
     '.jpeg',
     '.png',
     '.m4s',
-    '.mp4'
+    '.mp4',
+    '.html',
+    '.js',
+    '.css',
+    '.txt',
+    '.webp',
+    '.ico'
   ];
   
   /**
