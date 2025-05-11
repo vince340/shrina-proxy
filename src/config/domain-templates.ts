@@ -787,6 +787,8 @@ export const domainTemplates: DomainTemplate[] = [
         'sec-fetch-dest': 'empty',
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'cross-site',
+        'cache-control': 'no-cache',
+        'pragma': 'no-cache',
       },
       headersFn: (url: URL) => {
         return {
@@ -825,6 +827,8 @@ export const domainTemplates: DomainTemplate[] = [
         'sec-fetch-dest': 'empty',
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'cross-site',
+        'cache-control': 'no-cache',
+        'pragma': 'no-cache',
       },
       headersFn: (url: URL) => {
         return {
