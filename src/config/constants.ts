@@ -14,7 +14,7 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env') });
  */
 export const SERVER = {
   PORT: parseInt(process.env.PORT || '3000', 10),
-  HOST: process.env.HOST || 'localhost',
+  HOST: process.env.HOST || '0.0.0.0',
   NODE_ENV: process.env.NODE_ENV || 'development',
   IS_PRODUCTION: process.env.NODE_ENV === 'production',
   IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
