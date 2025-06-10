@@ -1,0 +1,30 @@
+[22:38:02.482] Running build in Washington, D.C., USA (East) – iad1
+[22:38:02.483] Build machine configuration: 2 cores, 8 GB
+[22:38:02.512] Cloning github.com/vince340/shrina-proxy (Branch: main, Commit: a930f29)
+[22:38:02.529] Skipping build cache, deployment was triggered without cache.
+[22:38:02.781] Cloning completed: 269.000ms
+[22:38:03.113] Running "vercel build"
+[22:38:03.701] Vercel CLI 42.2.0
+[22:38:04.231] Warning: Detected "engines": { "node": ">=18.0.0" } in your `package.json` that will automatically upgrade when a new major Node.js Version is released. Learn More: http://vercel.link/node-version
+[22:38:04.235] Installing dependencies...
+[22:38:31.592] npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+[22:38:32.981] npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+[22:38:33.192] npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+[22:38:33.354] npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+[22:38:33.364] npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+[22:38:33.368] npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+[22:38:34.266] npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+[22:38:34.713] 
+[22:38:34.713] added 428 packages in 30s
+[22:38:34.714] 
+[22:38:34.714] 98 packages are looking for funding
+[22:38:34.714]   run `npm fund` for details
+[22:38:34.773] Running "npm run build"
+[22:38:34.887] 
+[22:38:34.888] > shinra-proxy@0.2.0 build
+[22:38:34.888] > rimraf dist && tsc
+[22:38:34.888] 
+[22:38:37.358] Error: No Output Directory named "public" found after the Build completed. You can configure the Output Directory in your Project Settings.
+[22:38:37.358] Learn More: https://vercel.link/missing-public-directory
+[22:38:37.536] 
+[22:38:40.063] Exiting build container
